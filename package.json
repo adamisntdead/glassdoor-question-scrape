@@ -1,7 +1,7 @@
 {
   "name": "glassdoor-question-scrape",
   "version": "1.0.0",
-  "description": "> Scrape interview questions from Glassdoor",
+  "description": "Scrape interview questions from Glassdoor",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

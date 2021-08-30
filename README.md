@@ -2,4 +2,8 @@
 
 > Scrape interview questions from Glassdoor
 
-To use this, fill in your credentials, and update the configurations settings
+## Usage
+
+1. Run `npm install`
+2. Update the configuration in `scrape.js`
+3. Run `node scrape`

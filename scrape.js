@@ -13,10 +13,6 @@ const CONFIG = {
     outputName: 'five-rings'
 }
 
-
-const USERNAME = 'sampleusername' // This might be your email
-const PASSWORD = 'samplepassword'
-
 async function glassdoorLogin(page) {
     // Go to the login page
     await page.goto(CONFIG.glassdoorHome, {
@@ -29,8 +25,8 @@ async function glassdoorLogin(page) {
 
     // Wait for the sign in panel to appear, and input the username and password
     await page.waitForSelector('input[name=username]')
-    await page.$eval('input[name=username]', el => el.value = CONFIG.username)
-    await page.$eval('input[name=password]', el => el.value = CONFIG.password)
+    await page.$eval('input[name=username]', (el, CONFIG) => el.value = CONFIG.username, CONFIG)
+    await page.$eval('input[name=password]', (el, CONFIG) => el.value = CONFIG.password, CONFIG)
 
     // Perform the login, and wait for the page to load
     await page.$eval('button[name=submit]', el => el.click())
@@ -89,8 +85,6 @@ function parseQuestion(html) {
 
     await browser.close()
 
-
-
     const questions = fs.readFileSync(`${CONFIG.outputName}.txt`, 'utf-8')
 
     const batches = questions.split('================================================')
@@ -108,20 +102,17 @@ function parseQuestion(html) {
     }))
 
     fs.writeFileSync(`${CONFIG.outputName}.json`, JSON.stringify(finalList))
+    fs.deleteFileSync(`${CONFIG.outputName}.txt`)
 
-    const questions = []
+    const qs = []
 
     finalList.forEach(x => {
-        x.interviewQuestions.forEach(q => questions.push(q))
+        x.interviewQuestions.forEach(q => qs.push(q))
     })
 
-    let output = `# Interview Questions
+    let output = '# Interview Questions\n\n> This is an unfiltered collection of responses detailing questions people were asked at their interview.\n\n'
 
-    > This is an unfiltered collection of responses detailing questions people were asked at their interview.
-
-    `
-
-    questions.forEach(q => {
+    qs.forEach(q => {
         output += `\n* ${q.replaceAll('\n', '; ')}`
     })
 
